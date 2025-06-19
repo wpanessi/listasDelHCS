@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.myjavafxapp.controller.MainAppController"
+            prefHeight="700.0" prefWidth="900.0">
+
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Councilors">
+                    <content>
+                        <fx:include source="CouncilorView.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Council Lists">
+                    <content>
+                        <fx:include source="CouncilListView.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Sessions">
+                    <content>
+                        <fx:include source="SessionView.fxml"/>
+                    </content>
+                </Tab>
+                    <Tab text="Session Day - President">
+                        <content>
+                            <fx:include source="PresidentSessionView.fxml"/>
+                        </content>
+                    </Tab>
+                    <Tab text="Session Day - Public Display">
+                        <content>
+                            <fx:include source="PublicDisplayView.fxml"/>
+                        </content>
+                    </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+
+</BorderPane>

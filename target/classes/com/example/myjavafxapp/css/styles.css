@@ -1,0 +1,103 @@
+/* General Styles */
+.root {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.label {
+    /* -fx-font-weight: bold; Let FXML or specific selectors handle boldness for labels */
+}
+
+.button {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-text-fill: white;
+    -fx-padding: 5 10 5 10;
+    -fx-background-radius: 4; /* Added rounded corners */
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+.table-view {
+    -fx-border-color: lightgray;
+    -fx-table-cell-border-color: lightgray; /* Ensure cell borders are visible */
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #e0e0e0; /* Lightened tab header */
+}
+
+.tab {
+    -fx-padding: 5 15 5 15;
+    -fx-focus-traversable: false;
+}
+
+.text-field {
+    -fx-padding: 4px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+}
+
+.list-view {
+    -fx-border-color: lightgray;
+}
+
+/* Specific for President's View */
+#currentlySpeakingLabel { /* fx:id in PresidentSessionView.fxml */
+    -fx-font-size: 18px; /* Increased size */
+    -fx-text-fill: #0000CD; /* MediumBlue */
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+    -fx-background-color: #f0f8ff; /* AliceBlue background */
+    -fx-border-color: #add8e6; /* LightBlue border */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Specific for Public Display View */
+#publicCurrentlySpeakingLabel { /* fx:id in PublicDisplayView.fxml */
+    -fx-font-size: 26px; /* Increased size */
+    -fx-text-fill: #A52A2A; /* Brown (instead of DarkRed for better contrast on some screens) */
+    -fx-padding: 15px;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+#publicOratorsListView { /* fx:id in PublicDisplayView.fxml */
+    -fx-font-size: 18px; /* Increased size */
+    -fx-background-color: #fdf5e6; /* OldLace background */
+    -fx-border-color: #d2b48c; /* Tan border */
+}
+
+/* Style for selected items in ListView */
+.list-view .list-cell:filled:selected:focused, .list-view .list-cell:filled:selected {
+    -fx-background-color: #0078D7;
+    -fx-text-fill: white;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+/* TableView header */
+.table-view .column-header-background {
+    -fx-background-color: #e0e0e0;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.table-view .table-cell {
+    -fx-padding: 0.3em 0.5em 0.3em 0.5em; /* Adjust cell padding */
+}
+
+/* DatePicker style */
+.date-picker .text-field {
+    -fx-padding: 4px; /* Match TextField padding */
+}
+.date-picker .arrow-button {
+    -fx-padding: 6px;
+}

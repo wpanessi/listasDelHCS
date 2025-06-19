@@ -1,0 +1,16 @@
+/app/src/main/java/com/example/myjavafxapp/model/Session.java
+/app/src/main/java/com/example/myjavafxapp/MainController.java
+/app/src/main/java/com/example/myjavafxapp/repository/SessionRepository.java
+/app/src/main/java/com/example/myjavafxapp/controller/CouncilorController.java
+/app/src/main/java/com/example/myjavafxapp/repository/CouncilorRepository.java
+/app/src/main/java/com/example/myjavafxapp/service/SessionStateService.java
+/app/src/main/java/com/example/myjavafxapp/controller/CouncilListController.java
+/app/src/main/java/com/example/myjavafxapp/JavaFxApp.java
+/app/src/main/java/com/example/myjavafxapp/controller/PresidentSessionController.java
+/app/src/main/java/com/example/myjavafxapp/controller/SessionController.java
+/app/src/main/java/com/example/myjavafxapp/repository/CouncilListRepository.java
+/app/src/main/java/com/example/myjavafxapp/model/CouncilList.java
+/app/src/main/java/com/example/myjavafxapp/controller/MainAppController.java
+/app/src/main/java/com/example/myjavafxapp/model/Councilor.java
+/app/src/main/java/com/example/myjavafxapp/controller/PublicDisplayController.java
+/app/src/main/java/com/example/myjavafxapp/MyJavafxAppApplication.java

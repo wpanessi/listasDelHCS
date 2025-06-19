@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.myjavafxapp.controller.PublicDisplayController"
+      alignment="CENTER" spacing="20.0" prefHeight="600.0" prefWidth="800.0">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <children>
+        <Label text="Currently Speaking:">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Label>
+        <Label fx:id="publicCurrentlySpeakingLabel" text="None" style="-fx-font-size: 28px; -fx-text-fill: darkred; -fx-font-weight: bold;">
+            <font>
+                <Font name="System Bold Italic" size="28.0"/>
+            </font>
+            <VBox.margin>
+                <Insets bottom="20.0"/>
+            </VBox.margin>
+        </Label>
+
+        <Label text="Upcoming Speakers:">
+            <font>
+                <Font name="System Bold" size="20.0"/>
+            </font>
+        </Label>
+        <ListView fx:id="publicOratorsListView" prefHeight="400.0"/>
+    </children>
+</VBox>

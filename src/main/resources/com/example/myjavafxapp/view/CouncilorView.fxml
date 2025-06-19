@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.myjavafxapp.controller.CouncilorController"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <center>
+        <TableView fx:id="councilorTable" prefHeight="400.0" prefWidth="600.0">
+            <columns>
+                <TableColumn fx:id="lastNameColumn" prefWidth="150.0" text="Last Name"/>
+                <TableColumn fx:id="firstNameColumn" prefWidth="150.0" text="First Name"/>
+                <TableColumn fx:id="listNameColumn" prefWidth="150.0" text="List Name"/>
+                <TableColumn fx:id="isTitularColumn" prefWidth="100.0" text="Titular"/>
+                <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions"/>
+            </columns>
+            <BorderPane.margin>
+                <Insets top="10.0"/>
+            </BorderPane.margin>
+        </TableView>
+    </center>
+
+    <bottom>
+        <VBox spacing="10.0" alignment="CENTER_LEFT">
+            <BorderPane.margin>
+                <Insets top="10.0"/>
+            </BorderPane.margin>
+            <children>
+                <GridPane hgap="10.0" vgap="5.0">
+                    <Label text="Last Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="lastNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="First Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="List Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <TextField fx:id="listNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Titular:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="isTitularCheckBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Button fx:id="addButton" text="Add" onAction="#handleAddButtonAction"/>
+                    <Button fx:id="updateButton" text="Update" onAction="#handleUpdateButtonAction"/>
+                    <Button fx:id="deleteButton" text="Delete Selected" onAction="#handleDeleteButtonAction"/>
+                    <Button fx:id="clearButton" text="Clear Form" onAction="#handleClearButtonAction"/>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>
