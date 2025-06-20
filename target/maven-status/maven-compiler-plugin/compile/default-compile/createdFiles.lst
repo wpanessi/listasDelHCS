@@ -16,4 +16,5 @@ com/example/myjavafxapp/model/Session.class
 com/example/myjavafxapp/service/SessionStateService.class
 com/example/myjavafxapp/controller/CouncilorController$1.class
 com/example/myjavafxapp/controller/CouncilorController.class
+com/example/myjavafxapp/controller/SessionController$1.class
 com/example/myjavafxapp/MainController.class

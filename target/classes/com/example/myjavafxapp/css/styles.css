@@ -43,6 +43,34 @@
     -fx-border-color: lightgray;
 }
 
+/* Styles for active session indication in table cell */
+.table-cell.active-session-yes {
+    -fx-text-fill: green;
+    -fx-font-weight: bold;
+}
+.table-cell.active-session-no {
+    -fx-text-fill: grey;
+}
+
+#toggleActivationButton.activate {
+     -fx-background-color: #4CAF50; /* Green */
+}
+
+#toggleActivationButton.deactivate {
+     -fx-background-color: #ff9800; /* Orange */
+}
+
+#attendancePane { /* fx:id in SessionView.fxml */
+    -fx-padding: 10px;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1px;
+    -fx-background-color: #f9f9f9;
+}
+#attendanceSessionLabel { /* fx:id in SessionView.fxml */
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em; /* Relative to root font size */
+}
+
 /* Specific for President's View */
 #currentlySpeakingLabel { /* fx:id in PresidentSessionView.fxml */
     -fx-font-size: 18px; /* Increased size */
@@ -55,9 +83,26 @@
     -fx-background-radius: 5px;
 }
 
+#activeSessionInfoLabel { /* fx:id in PresidentSessionView.fxml */
+    -fx-font-size: 1.2em; /* Relative to root font size, made it a bit larger */
+    -fx-padding: 8px; /* Increased padding */
+    -fx-background-color: #f0f0f0; /* Light grey background */
+    -fx-border-color: #cccccc; /* Darker grey border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+#activeSessionInfoLabel.no-active-session { /* Style for when no session is active */
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+    -fx-background-color: #fff0f0; /* Light red background */
+    -fx-border-color: #ffc0c0; /* Light red border */
+}
+
 /* Specific for Public Display View */
 #publicCurrentlySpeakingLabel { /* fx:id in PublicDisplayView.fxml */
-    -fx-font-size: 26px; /* Increased size */
+    -fx-font-size: 22px; /* Adjusted size */
     -fx-text-fill: #A52A2A; /* Brown (instead of DarkRed for better contrast on some screens) */
     -fx-padding: 15px;
     -fx-alignment: center;
@@ -65,9 +110,9 @@
 }
 
 #publicOratorsListView { /* fx:id in PublicDisplayView.fxml */
-    -fx-font-size: 18px; /* Increased size */
-    -fx-background-color: #fdf5e6; /* OldLace background */
-    -fx-border-color: #d2b48c; /* Tan border */
+    -fx-font-size: 18px;
+    -fx-background-color: #fdf5e6;
+    -fx-border-color: #d2b48c;
 }
 
 /* Style for selected items in ListView */

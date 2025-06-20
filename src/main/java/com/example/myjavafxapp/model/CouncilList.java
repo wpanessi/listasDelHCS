@@ -48,4 +48,10 @@ public class CouncilList {
     public void setCloister(String cloister) {
         this.cloister = cloister;
     }
+
+    @Override
+    public String toString() {
+        return (listNumber != null ? listNumber : "N/A") +
+               (cloister != null && !cloister.isEmpty() ? " (" + cloister + ")" : "");
+    }
 }

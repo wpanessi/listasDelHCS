@@ -1,18 +1,21 @@
 package com.example.myjavafxapp.controller;
 
+import com.example.myjavafxapp.model.CouncilList;
 import com.example.myjavafxapp.model.Councilor;
+import com.example.myjavafxapp.repository.CouncilListRepository;
 import com.example.myjavafxapp.repository.CouncilorRepository;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableCell;
-import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +29,9 @@ public class CouncilorController {
     @FXML
     private TableColumn<Councilor, String> firstNameColumn;
     @FXML
-    private TableColumn<Councilor, String> listNameColumn;
+    private TableColumn<Councilor, String> councilListNumberColumn; // Updated
+    @FXML
+    private TableColumn<Councilor, String> councilListCloisterColumn; // Updated
     @FXML
     private TableColumn<Councilor, Boolean> isTitularColumn;
     @FXML
@@ -37,7 +42,7 @@ public class CouncilorController {
     @FXML
     private TextField firstNameField;
     @FXML
-    private TextField listNameField;
+    private ComboBox<CouncilList> councilListComboBox; // Updated
     @FXML
     private CheckBox isTitularCheckBox;
 
@@ -52,13 +57,15 @@ public class CouncilorController {
 
     // Using Autowired but it won't be fully utilized until DB persistence is implemented
     private final CouncilorRepository councilorRepository;
+    private final CouncilListRepository councilListRepository; // Added
 
     private final ObservableList<Councilor> councilorData = FXCollections.observableArrayList();
     private Councilor selectedCouncilor = null;
 
     @Autowired
-    public CouncilorController(CouncilorRepository councilorRepository) {
+    public CouncilorController(CouncilorRepository councilorRepository, CouncilListRepository councilListRepository) { // Added
         this.councilorRepository = councilorRepository;
+        this.councilListRepository = councilListRepository; // Added
     }
 
     @FXML
@@ -67,9 +74,23 @@ public class CouncilorController {
         councilorData.addAll(councilorRepository.findAll());
         System.out.println("Councilors loaded from DB: " + councilorData.size());
 
+        // Populate ComboBox
+        councilListComboBox.setItems(FXCollections.observableArrayList(councilListRepository.findAll()));
+        System.out.println("CouncilLists loaded into ComboBox: " + councilListComboBox.getItems().size());
+
+
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        listNameColumn.setCellValueFactory(new PropertyValueFactory<>("listName"));
+
+        councilListNumberColumn.setCellValueFactory(cellData -> {
+            CouncilList list = cellData.getValue().getCouncilList();
+            return new SimpleStringProperty(list != null ? list.getListNumber() : "");
+        });
+        councilListCloisterColumn.setCellValueFactory(cellData -> {
+            CouncilList list = cellData.getValue().getCouncilList();
+            return new SimpleStringProperty(list != null ? list.getCloister() : "");
+        });
+
         isTitularColumn.setCellValueFactory(new PropertyValueFactory<>("isTitular"));
 
         // Custom cell for isTitular to show Yes/No
@@ -108,7 +129,7 @@ public class CouncilorController {
         if (councilor != null) {
             lastNameField.setText(councilor.getLastName());
             firstNameField.setText(councilor.getFirstName());
-            listNameField.setText(councilor.getListName());
+            councilListComboBox.setValue(councilor.getCouncilList()); // Set ComboBox value
             isTitularCheckBox.setSelected(councilor.isTitular());
             updateButton.setDisable(false);
             deleteButton.setDisable(false);
@@ -123,12 +144,12 @@ public class CouncilorController {
             Councilor newCouncilor = new Councilor(
                     lastNameField.getText(),
                     firstNameField.getText(),
-                    listNameField.getText(),
+                    councilListComboBox.getValue(), // Get from ComboBox
                     isTitularCheckBox.isSelected()
             );
             Councilor savedCouncilor = councilorRepository.save(newCouncilor);
             councilorData.add(savedCouncilor);
-            System.out.println("Added councilor: " + savedCouncilor.getFirstName() + " " + savedCouncilor.getLastName() + " with ID: " + savedCouncilor.getId());
+            System.out.println("Added councilor: " + savedCouncilor.getFirstName() + " " + savedCouncilor.getLastName() + " with ID: " + savedCouncilor.getId() + ", List: " + (savedCouncilor.getCouncilList() != null ? savedCouncilor.getCouncilList().toString() : "None"));
             clearForm();
         }
     }
@@ -138,7 +159,7 @@ public class CouncilorController {
         if (selectedCouncilor != null && validateInput()) {
             selectedCouncilor.setLastName(lastNameField.getText());
             selectedCouncilor.setFirstName(firstNameField.getText());
-            selectedCouncilor.setListName(listNameField.getText());
+            selectedCouncilor.setCouncilList(councilListComboBox.getValue()); // Get from ComboBox
             selectedCouncilor.setTitular(isTitularCheckBox.isSelected());
 
             Councilor updatedCouncilor = councilorRepository.save(selectedCouncilor);
@@ -173,7 +194,7 @@ public class CouncilorController {
     private void clearForm() {
         lastNameField.clear();
         firstNameField.clear();
-        listNameField.clear();
+        councilListComboBox.setValue(null); // Clear ComboBox
         isTitularCheckBox.setSelected(false);
         selectedCouncilor = null;
         councilorTable.getSelectionModel().clearSelection();
@@ -185,7 +206,7 @@ public class CouncilorController {
     private boolean validateInput() {
         String lastName = lastNameField.getText();
         String firstName = firstNameField.getText();
-        String listName = listNameField.getText(); // listName can be optional based on requirements
+        // CouncilList councilList = councilListComboBox.getValue(); // listName is now councilList
 
         if (lastName == null || lastName.trim().isEmpty()) {
             showErrorAlert("Validation Error", "Last Name cannot be empty.");
@@ -197,12 +218,12 @@ public class CouncilorController {
             firstNameField.requestFocus();
             return false;
         }
-        // Example: if listName was mandatory
-        // if (listName == null || listName.trim().isEmpty()) {
-        // showErrorAlert("Validation Error", "List Name cannot be empty.");
-        // listNameField.requestFocus();
-        // return false;
-        // }
+        // Validation for ComboBox (e.g., if a list selection is mandatory)
+        if (councilListComboBox.getValue() == null) {
+            showErrorAlert("Validation Error", "Council List selection is required.");
+            councilListComboBox.requestFocus();
+            return false;
+        }
         return true;
     }
 

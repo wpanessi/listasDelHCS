@@ -12,6 +12,15 @@
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.myjavafxapp.controller.PresidentSessionController"
             prefHeight="700.0" prefWidth="900.0">
+
+    <top>
+        <Label fx:id="activeSessionInfoLabel" style="-fx-font-size: 16px; -fx-padding: 5px; -fx-text-fill: #333;" BorderPane.alignment="CENTER_LEFT">
+            <BorderPane.margin>
+                <Insets bottom="10.0"/>
+            </BorderPane.margin>
+        </Label>
+    </top>
+
     <padding>
         <Insets top="15" right="15" bottom="15" left="15"/>
     </padding>

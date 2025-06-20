@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Councilor {
@@ -14,17 +16,21 @@ public class Councilor {
 
     private String lastName;
     private String firstName;
-    private String listName; // This might later be a relationship to CouncilList
+
+    @ManyToOne
+    @JoinColumn(name = "council_list_id")
+    private CouncilList councilList;
+
     private boolean isTitular;
 
     // Constructors
     public Councilor() {
     }
 
-    public Councilor(String lastName, String firstName, String listName, boolean isTitular) {
+    public Councilor(String lastName, String firstName, CouncilList councilList, boolean isTitular) {
         this.lastName = lastName;
         this.firstName = firstName;
-        this.listName = listName;
+        this.councilList = councilList;
         this.isTitular = isTitular;
     }
 
@@ -53,12 +59,12 @@ public class Councilor {
         this.firstName = firstName;
     }
 
-    public String getListName() {
-        return listName;
+    public CouncilList getCouncilList() {
+        return councilList;
     }
 
-    public void setListName(String listName) {
-        this.listName = listName;
+    public void setCouncilList(CouncilList councilList) {
+        this.councilList = councilList;
     }
 
     public boolean isTitular() {

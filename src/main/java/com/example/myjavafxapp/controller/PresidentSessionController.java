@@ -1,7 +1,12 @@
 package com.example.myjavafxapp.controller;
 
+import com.example.myjavafxapp.model.CouncilList;
+import com.example.myjavafxapp.model.CouncilList;
 import com.example.myjavafxapp.model.Councilor;
+import com.example.myjavafxapp.model.Session;
 import com.example.myjavafxapp.repository.CouncilorRepository;
+import com.example.myjavafxapp.repository.SessionRepository;
+import java.util.Set; // Added import
 import com.example.myjavafxapp.service.SessionStateService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,24 +37,28 @@ public class PresidentSessionController {
     private Label currentlySpeakingLabel;
     @FXML
     private Button finishedSpeakingButton;
+    @FXML
+    private Label activeSessionInfoLabel; // Added
 
     private final CouncilorRepository councilorRepository;
+    private final SessionRepository sessionRepository; // Added
     private final SessionStateService sessionStateService;
 
     private final ObservableList<Councilor> availableCouncilors = FXCollections.observableArrayList();
     // oratorsList and currentlySpeakingCouncilor are now managed by SessionStateService
 
     @Autowired
-    public PresidentSessionController(CouncilorRepository councilorRepository, SessionStateService sessionStateService) {
+    public PresidentSessionController(CouncilorRepository councilorRepository,
+                                      SessionRepository sessionRepository, // Added
+                                      SessionStateService sessionStateService) {
         this.councilorRepository = councilorRepository;
+        this.sessionRepository = sessionRepository; // Added
         this.sessionStateService = sessionStateService;
     }
 
     @FXML
     public void initialize() {
-        // Load available councilors from repository
-        availableCouncilors.addAll(councilorRepository.findAll());
-        System.out.println("PresidentSessionController: Available councilors loaded from DB: " + availableCouncilors.size());
+        loadDataForActiveSession(); // New method to load data
 
         setupListViewCellFactory(availableCouncilorsListView);
         setupListViewCellFactory(oratorsListView);
@@ -71,6 +80,32 @@ public class PresidentSessionController {
         updateButtonStates(); // Initial button states
     }
 
+    private void loadDataForActiveSession() {
+        availableCouncilors.clear(); // Clear previous list
+        java.util.Optional<Session> activeSessionOpt = sessionRepository.findByIsActiveTrue();
+
+        if (activeSessionOpt.isPresent()) {
+            Session activeSession = activeSessionOpt.get();
+            activeSessionInfoLabel.setText("Active Session: " + activeSession.getSessionNumberPerYear() + " (Date: " + activeSession.getDate().toString() + ")");
+            activeSessionInfoLabel.getStyleClass().removeAll("no-active-session"); // Remove 'no-active' style
+            // Eager fetch should have loaded presentCouncilors
+            Set<Councilor> presentCouncilorsSet = activeSession.getPresentCouncilors();
+            availableCouncilors.addAll(presentCouncilorsSet);
+            System.out.println("PresidentSessionController: Loaded " + presentCouncilorsSet.size() + " present councilors for active session.");
+            // Enable relevant UI parts
+        } else {
+            activeSessionInfoLabel.setText("No active session. Please activate a session in the 'Sessions' tab.");
+            System.out.println("PresidentSessionController: No active session found.");
+            // Disable relevant UI parts if needed, updateButtonStates should handle some of this
+            activeSessionInfoLabel.getStyleClass().add("no-active-session"); // Add 'no-active' style
+        }
+        // Refresh orators list and current speaker from service, as they might have stale references if app was restarted without proper state saving
+        // For now, SessionStateService is in-memory and resets on app start.
+        // If it were persisted, we'd need to load its state here too.
+        sessionStateService.clearOrators(); // Clear any previous orators
+        sessionStateService.setCurrentlySpeaking(null); // Clear current speaker
+    }
+
     private void setupListViewCellFactory(ListView<Councilor> listView) {
         listView.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -79,7 +114,9 @@ public class PresidentSessionController {
                 if (empty || councilor == null) {
                     setText(null);
                 } else {
-                    setText(councilor.getFirstName() + " " + councilor.getLastName() + " (" + councilor.getListName() + ")");
+                    CouncilList list = councilor.getCouncilList();
+                    String listDisplay = (list != null) ? list.toString() : "No List";
+                    setText(councilor.getFirstName() + " " + councilor.getLastName() + " (" + listDisplay + ")");
                 }
             }
         });
@@ -157,14 +194,27 @@ public class PresidentSessionController {
         finishedSpeakingButton.setDisable(!someoneSpeaking);
 
         Councilor selectedAvailable = availableCouncilorsListView.getSelectionModel().getSelectedItem();
-        if (selectedAvailable != null) {
+        if (selectedAvailable != null && !availableCouncilors.isEmpty()) { // Check if availableCouncilors list is not empty
             boolean alreadyOrator = sessionStateService.getOratorsList().contains(selectedAvailable);
             boolean isCurrentlySpeaking = selectedAvailable.equals(sessionStateService.currentlySpeakingCouncilorProperty().get());
             if (alreadyOrator || isCurrentlySpeaking) {
                  requestSpeakButton.setDisable(true);
             }
         } else {
-             requestSpeakButton.setDisable(true); // No selection in available list
+             requestSpeakButton.setDisable(true);
+        }
+
+        // Disable all speaker management if no active session / no available councilors
+        boolean sessionControlsDisabled = availableCouncilors.isEmpty();
+        requestSpeakButton.setDisable(requestSpeakButton.isDisable() || sessionControlsDisabled); // Keep existing disable logic + new condition
+        removeSpeakerButton.setDisable(removeSpeakerButton.isDisable() || sessionControlsDisabled);
+        moveToSpeakingButton.setDisable(moveToSpeakingButton.isDisable() || sessionControlsDisabled);
+        finishedSpeakingButton.setDisable(finishedSpeakingButton.isDisable() || sessionControlsDisabled);
+        oratorsListView.setDisable(sessionControlsDisabled);
+        availableCouncilorsListView.setDisable(sessionControlsDisabled);
+
+        if(sessionControlsDisabled) {
+            currentlySpeakingLabel.setText("None (No active session/attendance)");
         }
     }
 
